@@ -1,0 +1,11 @@
+.colorselector{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#editor{
+    border: 1px solid #ccc;
+    cursor: crosshair;
+}

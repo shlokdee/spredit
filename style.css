@@ -1,11 +1,264 @@
-.colorselector{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f4f5f7;
+  color: #111827;
+  margin: 0;
+  padding: 0;
 }
 
-#editor{
-    border: 1px solid #ccc;
-    cursor: crosshair;
+/* App Containers */
+.app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.editor-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+}
+
+.editor-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 524px;
+  margin-bottom: 16px;
+}
+
+.sprite-title-input {
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-align: right;
+}
+
+.sprite-title-input:hover, .sprite-title-input:focus {
+  background: #ffffff;
+  border-color: #dcdcdc;
+  outline: none;
+}
+
+/* Gallery Styles */
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.gallery-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.subtitle {
+  margin: 4px 0 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.sprite-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.sprite-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sprite-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.sprite-card canvas {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  image-rendering: pixelated;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.card-info {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sprite-name {
+  font-weight: 600;
+  font-size: 14px;
+  truncate: ellipsis;
+}
+
+.sprite-date {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 0;
+  color: #6b7280;
+}
+
+/* Editor Container */
+.editor-container {
+  display: flex;
+  gap: 24px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+canvas {
+  border: 1px solid #dcdcdc;
+  cursor: crosshair;
+  border-radius: 4px;
+  image-rendering: pixelated;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  gap: 20px;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2e7d32;
+  background: #edf7ed;
+  padding: 6px 12px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.status-badge.saving {
+  color: #d97706;
+  background: #fef3c7;
+}
+
+/* Palette Grid */
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  transition: transform 0.1s;
+}
+
+.swatch:hover {
+  transform: scale(1.05);
+}
+
+.swatch.active {
+  border-color: #111827;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.swatch-color-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
 }

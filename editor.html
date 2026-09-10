@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Editor</title>
+  <meta charset="UTF-8">
+  <title>Pixel Editor</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div class="editor-layout">
+  <header class="editor-nav">
+    <a href="index.html" class="btn btn-secondary">← Back to Gallery</a>
+    <input type="text" id="spriteNameInput" class="sprite-title-input" value="Untitled Sprite" placeholder="Sprite Name...">
+  </header>
+
+  <div class="editor-container">
+    <!-- Left Side: Canvas -->
     <canvas id="editor" width="320" height="320"></canvas>
-    
-    <div class="colorselector">
-        <input type="color" id="colorPicker" value="#000000">
-        <button id="clearBtn">Clear</button>
+
+    <!-- Right Side: Sidebar Controls -->
+    <div class="sidebar">
+      <!-- Save Indicator -->
+      <div id="statusBadge" class="status-badge">
+        <span id="statusDot">●</span>
+        <span id="statusText">Saved</span>
+      </div>
+
+      <!-- Color Palette -->
+      <div>
+        <div class="section-title">Palette</div>
+        <div class="palette-grid" id="paletteGrid"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button id="clearBtn" class="btn btn-secondary">Clear Canvas</button>
+      </div>
     </div>
-    
-    <script src="script.js"></script>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>

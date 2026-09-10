@@ -1,11 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spredit</title>
+  <meta charset="UTF-8">
+  <title>Pixel Editor - Home</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+  <div class="app-container">
+    <header class="gallery-header">
+      <div>
+        <h1>My Sprites</h1>
+        <p class="subtitle">Select a sprite to edit or start a new project</p>
+      </div>
+      <button id="createNewBtn" class="btn btn-primary">+ Create New Sprite</button>
+    </header>
+
+    <div class="sprite-grid" id="spriteGrid">
+      <!-- Sprite cards render dynamically -->
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'pixel_sprites';
+
+    function getSprites() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function deleteSprite(id, event) {
+      event.stopPropagation();
+      if (confirm('Are you sure you want to delete this sprite?')) {
+        const sprites = getSprites();
+        delete sprites[id];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sprites));
+        renderGallery();
+      }
+    }
+
+    function createNewSprite() {
+      const newId = 'sprite_' + Date.now();
+      window.location.href = `editor.html?id=${newId}`;
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('spriteGrid');
+      const sprites = getSprites();
+      const spriteList = Object.values(sprites).sort((a, b) => b.updatedAt - a.updatedAt);
+
+      grid.innerHTML = '';
+
+      if (spriteList.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <p>No sprites created yet!</p>
+            <button class="btn btn-primary" onclick="createNewSprite()">Create Your First Sprite</button>
+          </div>
+        `;
+        return;
+      }
+
+      spriteList.forEach(sprite => {
+        const card = document.createElement('div');
+        card.className = 'sprite-card';
+        card.onclick = () => window.location.href = `editor.html?id=${sprite.id}`;
+
+        // Preview Canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        const pixelSize = 128 / 16;
+
+        // Render preview
+        for (let r = 0; r < 16; r++) {
+          for (let c = 0; c < 16; c++) {
+            ctx.fillStyle = sprite.pixels[r][c];
+            ctx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+          }
+        }
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+        
+        const dateStr = new Date(sprite.updatedAt).toLocaleDateString();
+        info.innerHTML = `
+          <div class="card-title-row">
+            <span class="sprite-name">${sprite.name || 'Untitled'}</span>
+            <button class="btn-delete" title="Delete">✕</button>
+          </div>
+          <span class="sprite-date">Edited ${dateStr}</span>
+        `;
+
+        info.querySelector('.btn-delete').onclick = (e) => deleteSprite(sprite.id, e);
+
+        card.appendChild(canvas);
+        card.appendChild(info);
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('createNewBtn').addEventListener('click', createNewSprite);
+    renderGallery();
+  </script>
 </body>
 </html>

@@ -68,34 +68,66 @@
         card.className = 'sprite-card';
         card.onclick = () => window.location.href = `editor.html?id=${sprite.id}`;
 
-        // Preview Canvas
         const canvas = document.createElement('canvas');
         canvas.width = 128;
         canvas.height = 128;
         const ctx = canvas.getContext('2d');
-        const pixelSize = 128 / 16;
 
-        // Render preview
-        for (let r = 0; r < 16; r++) {
-          for (let c = 0; c < 16; c++) {
-            ctx.fillStyle = sprite.pixels[r][c];
-            ctx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+        const spriteWidth = sprite.gridWidth || 16;
+        const spriteHeight = sprite.gridHeight || 16;
+        const pixelSize = Math.min(128 / spriteWidth, 128 / spriteHeight);
+        const offsetX = (128 - spriteWidth * pixelSize) / 2;
+        const offsetY = (128 - spriteHeight * pixelSize) / 2;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let r = 0; r < spriteHeight; r++) {
+          for (let c = 0; c < spriteWidth; c++) {
+            const row = sprite.pixels?.[r] || [];
+            const color = row[c];
+            if (color == null || color === '' || color === 'transparent') continue;
+            ctx.fillStyle = color;
+            ctx.fillRect(offsetX + c * pixelSize, offsetY + r * pixelSize, pixelSize, pixelSize);
           }
         }
 
         const info = document.createElement('div');
         info.className = 'card-info';
-        
-        const dateStr = new Date(sprite.updatedAt).toLocaleDateString();
-        info.innerHTML = `
-          <div class="card-title-row">
-            <span class="sprite-name">${sprite.name || 'Untitled'}</span>
-            <button class="btn-delete" title="Delete">✕</button>
-          </div>
-          <span class="sprite-date">Edited ${dateStr}</span>
-        `;
 
-        info.querySelector('.btn-delete').onclick = (e) => deleteSprite(sprite.id, e);
+        const titleRow = document.createElement('div');
+        titleRow.className = 'card-title-row';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'sprite-name-input card-name-input';
+        nameInput.value = sprite.name || 'Untitled Sprite';
+        nameInput.setAttribute('aria-label', 'Sprite name');
+        nameInput.addEventListener('change', (e) => {
+          const sprites = getSprites();
+          if (!sprites[sprite.id]) return;
+
+          sprites[sprite.id].name = e.target.value.trim() || 'Untitled Sprite';
+          sprites[sprite.id].updatedAt = Date.now();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(sprites));
+          renderGallery();
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete';
+        deleteBtn.title = 'Delete';
+        deleteBtn.textContent = '✕';
+        deleteBtn.onclick = (e) => deleteSprite(sprite.id, e);
+
+        titleRow.appendChild(nameInput);
+        titleRow.appendChild(deleteBtn);
+
+        const date = document.createElement('span');
+        date.className = 'sprite-date';
+        date.textContent = `Edited ${new Date(sprite.updatedAt).toLocaleDateString()}`;
+
+        info.appendChild(titleRow);
+        info.appendChild(date);
 
         card.appendChild(canvas);
         card.appendChild(info);

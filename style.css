@@ -106,10 +106,31 @@ body {
   align-items: center;
 }
 
-.sprite-name {
+.sprite-name,
+.sprite-name-input {
   font-weight: 600;
   font-size: 14px;
-  truncate: ellipsis;
+}
+
+.sprite-name-input {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 4px 6px;
+  border-radius: 6px;
+  color: #111827;
+  min-width: 0;
+}
+
+.sprite-name-input:hover,
+.sprite-name-input:focus {
+  border-color: #d1d5db;
+  background: #ffffff;
+  outline: none;
+}
+
+.card-name-input {
+  flex: 1;
 }
 
 .sprite-date {
@@ -205,6 +226,9 @@ canvas {
   position: relative;
   box-sizing: border-box;
   transition: transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .swatch:hover {
@@ -216,6 +240,28 @@ canvas {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
+.custom-swatch {
+  overflow: hidden;
+}
+
+.swatch-picker-icon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+
+.swatch-picker-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 .swatch-color-input {
   position: absolute;
   top: 0;
@@ -224,6 +270,88 @@ canvas {
   height: 100%;
   opacity: 0;
   cursor: pointer;
+  z-index: 2;
+}
+
+.tool-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tool-btn,
+.size-btn {
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  border-radius: 6px;
+  padding: 8px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tool-btn:hover,
+.size-btn:hover {
+  background: #f3f4f6;
+}
+
+.tool-btn.active,
+.size-btn.active {
+  background: #111827;
+  color: white;
+  border-color: #111827;
+}
+
+.size-presets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.size-btn:hover {
+  background: #f3f4f6;
+}
+
+.size-btn.active {
+  background: #111827;
+  color: white;
+  border-color: #111827;
+}
+
+.custom-size-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.custom-size-input {
+  flex: 1;
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.size-multiplier {
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.btn-small {
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 4px;
 }
 
 /* Buttons */

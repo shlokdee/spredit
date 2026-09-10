@@ -10,7 +10,7 @@
 <div class="editor-layout">
   <header class="editor-nav">
     <a href="index.html" class="btn btn-secondary">← Back to Gallery</a>
-    <input type="text" id="spriteNameInput" class="sprite-title-input" value="Untitled Sprite" placeholder="Sprite Name...">
+    <input type="text" id="spriteNameInput" class="sprite-title-input" value="Untitled Sprite" placeholder="Sprite Name..." aria-label="Sprite name">
   </header>
 
   <div class="editor-container">
@@ -31,8 +31,35 @@
         <div class="palette-grid" id="paletteGrid"></div>
       </div>
 
+      <!-- Tools -->
+      <div>
+        <div class="section-title">Tools</div>
+        <div class="tool-buttons">
+          <button class="tool-btn active" data-tool="paint">Paint</button>
+          <button class="tool-btn" data-tool="fill">Fill</button>
+        </div>
+      </div>
+
+      <!-- Sprite Size -->
+      <div>
+        <div class="section-title">Sprite Size</div>
+        <div class="size-presets">
+          <button class="size-btn" data-width="8" data-height="8">8×8</button>
+          <button class="size-btn active" data-width="16" data-height="16">16×16</button>
+          <button class="size-btn" data-width="16" data-height="24">16×24</button>
+          <button class="size-btn" data-width="24" data-height="32">24×32</button>
+        </div>
+        <div class="custom-size-row">
+          <input id="customGridWidthInput" type="number" min="1" max="64" value="16" class="custom-size-input" aria-label="Sprite width">
+          <span class="size-multiplier">×</span>
+          <input id="customGridHeightInput" type="number" min="1" max="64" value="16" class="custom-size-input" aria-label="Sprite height">
+        </div>
+        <button id="customGridSizeApply" class="btn btn-secondary btn-small full-width">Apply Size</button>
+      </div>
+
       <!-- Actions -->
       <div class="actions">
+        <button id="exportBtn" class="btn btn-primary">Export PNG</button>
         <button id="clearBtn" class="btn btn-secondary">Clear Canvas</button>
       </div>
     </div>

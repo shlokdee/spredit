@@ -321,9 +321,42 @@ function exportSpriteAsPng() {
   showSaveStatus('Exported PNG', false);
 }
 
+function copyPresetJsonToClipboard() {
+  const presetObject = {
+    name: spriteNameInput.value.trim() || 'Untitled Sprite',
+    gridWidth: GRID_WIDTH,
+    gridHeight: GRID_HEIGHT,
+    pixels: pixels.map((row) => row.map((cell) => cell ?? null))
+  };
+
+  const jsonText = JSON.stringify(presetObject, null, 2);
+
+  const copyText = async () => {
+    try {
+      await navigator.clipboard.writeText(jsonText);
+      showSaveStatus('Preset JSON copied', false);
+    } catch (error) {
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = jsonText;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      tempTextArea.remove();
+      showSaveStatus('Preset JSON copied', false);
+    }
+  };
+
+  copyText();
+}
+
 const exportBtn = document.getElementById('exportBtn');
 if (exportBtn) {
   exportBtn.addEventListener('click', exportSpriteAsPng);
+}
+
+const copyPresetBtn = document.getElementById('copyPresetBtn');
+if (copyPresetBtn) {
+  copyPresetBtn.addEventListener('click', copyPresetJsonToClipboard);
 }
 
 function setGridSize(nextWidth, nextHeight) {

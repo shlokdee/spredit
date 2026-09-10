@@ -15,6 +15,14 @@
       <button id="createNewBtn" class="btn btn-primary">+ Create New Sprite</button>
     </header>
 
+    <section class="preset-section">
+      <div class="preset-header">
+        <h2>Preset Assets</h2>
+        <p>Start from a common block or prop and customize it.</p>
+      </div>
+      <div id="presetGrid" class="preset-grid"></div>
+    </section>
+
     <div class="sprite-grid" id="spriteGrid">
       <!-- Sprite cards render dynamically -->
     </div>
@@ -44,6 +52,78 @@
     function createNewSprite() {
       const newId = 'sprite_' + Date.now();
       window.location.href = `editor.html?id=${newId}`;
+    }
+
+    function clonePresetToLibrary(asset) {
+      const sprites = getSprites();
+      const newId = 'sprite_' + Date.now();
+      const clone = {
+        id: newId,
+        name: `${asset.name} Copy`,
+        updatedAt: Date.now(),
+        gridWidth: asset.gridWidth,
+        gridHeight: asset.gridHeight,
+        pixels: asset.pixels.map(row => row.slice())
+      };
+
+      sprites[newId] = clone;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sprites));
+      window.location.href = `editor.html?id=${newId}`;
+    }
+
+    async function loadPresetAssets() {
+      const grid = document.getElementById('presetGrid');
+      if (!grid) return;
+
+      try {
+        const response = await fetch('./presets.json');
+        if (!response.ok) throw new Error('Failed to load presets');
+        const presetAssets = await response.json();
+
+        grid.innerHTML = '';
+
+        presetAssets.forEach(asset => {
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'preset-card';
+          card.title = `Use ${asset.name}`;
+          card.onclick = () => clonePresetToLibrary(asset);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = 96;
+          canvas.height = 96;
+          const ctx = canvas.getContext('2d');
+          const pixelSize = Math.min(96 / asset.gridWidth, 96 / asset.gridHeight);
+          const offsetX = (96 - asset.gridWidth * pixelSize) / 2;
+          const offsetY = (96 - asset.gridHeight * pixelSize) / 2;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          for (let r = 0; r < asset.gridHeight; r++) {
+            const row = Array.isArray(asset.pixels?.[r]) ? asset.pixels[r] : [];
+            for (let c = 0; c < asset.gridWidth; c++) {
+              const color = row[c];
+              if (!color) continue;
+              ctx.fillStyle = color;
+              ctx.fillRect(offsetX + c * pixelSize, offsetY + r * pixelSize, pixelSize, pixelSize);
+            }
+          }
+
+          const label = document.createElement('span');
+          label.className = 'preset-name';
+          label.textContent = asset.name;
+
+          card.appendChild(canvas);
+          card.appendChild(label);
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error(error);
+        const isFileOrigin = window.location.protocol === 'file:';
+        grid.innerHTML = isFileOrigin
+          ? '<p class="empty-state">Preset assets unavailable. Open the project through a local web server, for example: python3 -m http.server 8000</p>'
+          : '<p class="empty-state">Preset assets unavailable.</p>';
+      }
     }
 
     function renderGallery() {
@@ -136,6 +216,7 @@
     }
 
     document.getElementById('createNewBtn').addEventListener('click', createNewSprite);
+    loadPresetAssets();
     renderGallery();
   </script>
 </body>
